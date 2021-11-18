@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LOG IN</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+
+
+        body{
+        background-color: #7ab3e4;
+        background-size:cover;
+        background-repeat: no-repeat;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        height: 100vh;
+        justify-content: center;
+        align-items: center;
+        }
+        .center{
+            width: auto;
+            background: rgb(229 238 245 / 90%);
+            border-radius: 10px;
+        }
+
+        .center h1{
+        text-align: center;
+        padding: 0 0 20px 0;
+        border-bottom: 2px solid silver;
+        }
+
+        .center form{
+        padding: 0px 40px;
+        box-sizing: border-box;
+        }
+
+        form .txt_field{
+        position: relative;
+        border-bottom: 2px solid #adadad;
+        width: 100%;
+        margin: 30px 0;
+
+        }
+
+        .txt_field input{
+        width: 100%;
+        outline: none;
+        background: none;
+        border: none;
+        font-size: 16px;
+        padding: 0 5px;
+        }
+
+        .txt_field label{
+        position: absolute;
+        top: 50%;
+        left: 5px;
+        transform:translateY(-50%);
+        transition: 0.5s;
+        }
+
+
+        .txt_field input:focus ~ label,.txt_field input:valid ~ label{
+            top: -7px;
+            background: none;
+        }
+        input[type = "submit"]{
+        width: 100%;
+        align-items: center;
+        border-radius: 25px;
+        border: 1px solid;
+        font-size: 20px;
+        background-color: #2691d9;
+        color: white;
+        height: 40px;
+        margin-bottom: 10px;
+        }
+
+
+
+        input[type = "submit"]:hover{
+        cursor:pointer;
+        }
+
+    </style>
+
+
+</head>
+<body>
+<div class="txt_field">
+    <div class="center">
+        <h1>login</h1>
+        <form action="lServlet" method="post">
+            <div class="txt_field">
+                <input type="text" name="username" id="user_name">
+                <label>User Name</label>
+            </div>
+            <div class="txt_field">
+                <input type="password" name="pwd" id="password">
+                <label>Password</label>
+            </div>
+            <input type="submit" value="Login">
+        </form>
+
+    </div>
+</div>
+</body>
+</html>
