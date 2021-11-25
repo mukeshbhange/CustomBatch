@@ -8,18 +8,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bl.employeepayroll.dto.EmployeeDTO;
+import com.bl.employeepayroll.exceptions.EmployeeNotFoundException;
+import com.bl.employeepayroll.exceptions.EmployeePayRollExceptions;
 import com.bl.employeepayroll.model.EmployeePayrollData;
 import com.bl.employeepayroll.repository.IEmployeeRepo;
+import com.bl.employeepayroll.util.TokenUtil;
 
 
 @Service
 public class EmployeeServices implements IEmployeeServices{
 	
 	@Autowired
-	IEmployeeRepo employeeList;
+	TokenUtil utilToken;
 	
-	//private List<EmployeePayrollData> employeeList = new ArrayList<>();
-	
+	@Autowired
+	IEmployeeRepo employeeList;	
 	@Override
 	public List<EmployeePayrollData> getEmployeePayrollData() {
 		List<EmployeePayrollData> empList = new ArrayList<>();
@@ -36,25 +39,50 @@ public class EmployeeServices implements IEmployeeServices{
 	}
 
 	@Override
-	public EmployeePayrollData getEmployeePayrollDataById(long id) {
-		Optional<EmployeePayrollData> ispresent = employeeList.findById(id);
+	public EmployeePayrollData getEmployeePayrollDataById(String token) {
+		Optional<EmployeePayrollData> ispresent = employeeList.findById(utilToken.decodeToken(token));
 		if(ispresent.isPresent()) {
 			return ispresent.get();	
+		}else {
+			throw new EmployeePayRollExceptions("Employee of Id "+utilToken.decodeToken(token)+" not Found");
 		}
-		return null;
 	}
 
 	@Override
-	public void deleteEmployeePayrollDataById(long id) {
-		employeeList.deleteById(id);
+	public void deleteEmployeePayrollDataById(String token) {
+		
+		Optional<EmployeePayrollData> ispresent = employeeList.findById(utilToken.decodeToken(token));
+		if(ispresent.isPresent()) {
+			 	employeeList.deleteById(utilToken.decodeToken(token));
+
+		}else {
+			throw new EmployeePayRollExceptions("Employee of Id "+utilToken.decodeToken(token)+" not Found");
+		};
 	}
 
 	@Override
-	public EmployeePayrollData updateEmployeePayrollDataById(long id,EmployeeDTO employeedto) {
-		EmployeePayrollData empData = this.getEmployeePayrollDataById(id);
-		empData.setName(employeedto.getName());
-		empData.setSalary(employeedto.getSalary());
-		employeeList.save(empData);
-		return empData;
+	public EmployeePayrollData updateEmployeePayrollDataById(String token,EmployeeDTO employeedto) {
+		EmployeePayrollData empData = this.getEmployeePayrollDataById(token);
+		
+		if(employeeList.findById(utilToken.decodeToken(token)).isEmpty()) {
+			throw new EmployeeNotFoundException("Employee is not Found Of Id "+utilToken.decodeToken(token));	
+		}else {
+			empData.setName(employeedto.getName());
+			empData.setSalary(employeedto.getSalary());
+			empData.setGender(employeedto.getGender());
+			empData.setNote(employeedto.getNote());
+			empData.setStartDate(employeedto.getStartDate());
+			empData.setProfilePic(employeedto.getProfilePic());
+			empData.setDepartments(employeedto.getDepartments());
+			
+			employeeList.save(empData);
+			return empData;
+		}
+		
 	}
+
+	/*@Override
+	public List<EmployeePayrollData> findEmployeeByDepatment(String department) {
+		return employeeList.findEmployeeByDepatment(department) ;
+	}*/
 }
