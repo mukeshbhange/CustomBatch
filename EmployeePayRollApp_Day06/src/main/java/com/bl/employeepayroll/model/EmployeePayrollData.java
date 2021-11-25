@@ -2,19 +2,13 @@ package com.bl.employeepayroll.model;
 
 import java.time.LocalDate;
 import java.util.List;
-
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Table;
-
 import com.bl.employeepayroll.dto.EmployeeDTO;
-
 import lombok.Data;
 
 
@@ -32,14 +26,12 @@ public class EmployeePayrollData {
 	private String note;
 	private LocalDate startDate;
 	private String profilePic;
-	
-	@ElementCollection
-	@CollectionTable(name = "Employee_departments",joinColumns = @JoinColumn(name="emp_id"))
-	@Column(name="department")
-	private List<String> departments;
-	
 	private long salary;
-	
+
+	@ElementCollection
+	private List<String> departments;
+
+	//@CollectionTable(name = "Employee_departments",joinColumns = @JoinColumn(name="emp_id"))
 	public EmployeePayrollData(EmployeeDTO empdto) {
 		this.name = empdto.getName();
 		this.salary = empdto.getSalary();
@@ -53,5 +45,4 @@ public class EmployeePayrollData {
 	public EmployeePayrollData() {
 		
 	}
-
 }
