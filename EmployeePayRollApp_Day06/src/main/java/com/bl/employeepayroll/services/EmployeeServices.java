@@ -3,10 +3,8 @@ package com.bl.employeepayroll.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.bl.employeepayroll.dto.EmployeeDTO;
 import com.bl.employeepayroll.exceptions.EmployeeNotFoundException;
 import com.bl.employeepayroll.exceptions.EmployeePayRollExceptions;
@@ -23,6 +21,7 @@ public class EmployeeServices implements IEmployeeServices{
 	
 	@Autowired
 	IEmployeeRepo employeeList;	
+	
 	@Override
 	public List<EmployeePayrollData> getEmployeePayrollData() {
 		List<EmployeePayrollData> empList = new ArrayList<>();

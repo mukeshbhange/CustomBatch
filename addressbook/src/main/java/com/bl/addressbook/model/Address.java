@@ -9,8 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
-import com.bl.addressbook.dto.AddressDTO;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import lombok.Data;
@@ -49,13 +47,4 @@ public class Address {
 		this.country = country;
 		this.pinCode = pinCode;
 	}
-	
-	
-	
-/*	public Address(AddressDTO addDTO) {
-		this.landmark = addDTO.landmark;
-		this.city = addDTO.city;
-		this.state = addDTO.state;
-		this.country = addDTO.country;
-	}*/
 }

@@ -1,18 +1,21 @@
 package com.bl.addressbook.servces;
 
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.bl.addressbook.exceptions.UserNotFoundException;
 import com.bl.addressbook.model.Address;
 import com.bl.addressbook.model.UserData;
 import com.bl.addressbook.repository.UserDataRepo;
+import com.bl.addressbook.util.JwtUtil;
 
 
 @Service
 public class AddressBookServices implements IAddressBookServices {
+	
+	@Autowired
+	JwtUtil uToken;
 	
 	@Autowired
 	UserDataRepo userRepo;
@@ -27,42 +30,58 @@ public class AddressBookServices implements IAddressBookServices {
 
 
 	@Override
-	public void deleteUser(long id) {
-		userRepo.deleteById(id);
+	public UserData deleteUser(String token) throws UserNotFoundException {
+		if(!userRepo.findById(uToken.decodeToken(token)).isEmpty()) {
+			 UserData deleted = getOne(token);
+			userRepo.deleteById(uToken.decodeToken(token));
+			return deleted;
+		}else {
+			throw new UserNotFoundException((long)400,"Employee Not Found");
+		}
 	}
-
 
 	@Override
 	public List<UserData> getAllUsers() {
 		return userRepo.findAll();
 	}
 
-
 	@Override
-	public Optional<UserData> getOne(long id) {
-		return userRepo.findById(id);
+	public UserData getOne(String token) throws UserNotFoundException {
+		if(userRepo.findById(uToken.decodeToken(token)).isEmpty()) {
+			throw new UserNotFoundException((long)400,"User Not Found");
+		}else {
+			return userRepo.findById(uToken.decodeToken(token)).get();
+			
+		}	
 	}
 
 
 	@Override
-	public UserData updateUser(long id, UserData userData) {
-		Optional<UserData> found = this.getOne(id);
-		if(found.isPresent()) {
-			found.get().setName(userData.getName());
-			found.get().setMobileNo(userData.getMobileNo());
-			found.get().setEmail(userData.getEmail());
-			found.get().setGender(userData.getGender());
+	public UserData updateUser(String token, UserData userData) throws UserNotFoundException {
+		UserData found_user = this.getOne(token);
+		if(found_user != null) {
+			found_user.setName(userData.getName());
+			found_user.setMobileNo(userData.getMobileNo());
+			found_user.setEmail(userData.getEmail());
+			found_user.setGender(userData.getGender());
 			
-			Address addr = new Address();
-			addr.setLandmark(userData.getAddress().getLandmark());
-			addr.setCity(userData.getAddress().getCity());
-			addr.setState(userData.getAddress().getState());
-			addr.setCountry(userData.getAddress().getCountry());
-			addr.setPinCode(userData.getAddress().getPinCode());
-			addr.setUser(found.get());
-			userRepo.save(found.get());
+			Long found_user_addr_id = found_user.getAddress().getId();
+			Address address = new Address();
+			
+			address.setId(found_user_addr_id);
+			address.setLandmark(userData.getAddress().getLandmark());
+			address.setCity(userData.getAddress().getCity());
+			address.setState(userData.getAddress().getState());
+			address.setCountry(userData.getAddress().getCountry());
+			address.setPinCode(userData.getAddress().getPinCode());
+			address.setUser(found_user);
+			found_user.setAddress(address);
+			userRepo.save(found_user);
+			
+			return found_user;
+		}else {
+			new UserNotFoundException((long)400,"User Not Present to Update");
 		}
 		return null;
 	}
-
 }
