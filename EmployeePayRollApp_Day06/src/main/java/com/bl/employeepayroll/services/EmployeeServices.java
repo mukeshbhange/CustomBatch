@@ -3,11 +3,11 @@ package com.bl.employeepayroll.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.bl.employeepayroll.dto.EmployeeDTO;
-import com.bl.employeepayroll.exceptions.EmployeeNotFoundException;
-import com.bl.employeepayroll.exceptions.EmployeePayRollExceptions;
+import com.bl.employeepayroll.exceptions.EmployeeNoFound;
 import com.bl.employeepayroll.model.EmployeePayrollData;
 import com.bl.employeepayroll.repository.IEmployeeRepo;
 import com.bl.employeepayroll.util.TokenUtil;
@@ -26,6 +26,9 @@ public class EmployeeServices implements IEmployeeServices{
 	public List<EmployeePayrollData> getEmployeePayrollData() {
 		List<EmployeePayrollData> empList = new ArrayList<>();
 		employeeList.findAll().forEach(empList::add);
+		if(empList.isEmpty()) {
+			throw new EmployeeNoFound("No Employee Present,First Add Employee Data");
+		}
 		return empList;
 	}
 
@@ -43,7 +46,7 @@ public class EmployeeServices implements IEmployeeServices{
 		if(ispresent.isPresent()) {
 			return ispresent.get();	
 		}else {
-			throw new EmployeePayRollExceptions("Employee of Id "+utilToken.decodeToken(token)+" not Found");
+			throw new EmployeeNoFound("Employee of Id "+utilToken.decodeToken(token)+" is not present");
 		}
 	}
 
@@ -51,12 +54,12 @@ public class EmployeeServices implements IEmployeeServices{
 	public void deleteEmployeePayrollDataById(String token) {
 		
 		Optional<EmployeePayrollData> ispresent = employeeList.findById(utilToken.decodeToken(token));
-		if(ispresent.isPresent()) {
+		if(!ispresent.isEmpty()) {
 			 	employeeList.deleteById(utilToken.decodeToken(token));
 
 		}else {
-			throw new EmployeePayRollExceptions("Employee of Id "+utilToken.decodeToken(token)+" not Found");
-		};
+			throw new EmployeeNoFound("Employee of Id "+utilToken.decodeToken(token)+" is not present");
+			}
 	}
 
 	@Override
@@ -64,7 +67,7 @@ public class EmployeeServices implements IEmployeeServices{
 		EmployeePayrollData empData = this.getEmployeePayrollDataById(token);
 		
 		if(employeeList.findById(utilToken.decodeToken(token)).isEmpty()) {
-			throw new EmployeeNotFoundException("Employee is not Found Of Id "+utilToken.decodeToken(token));	
+			throw new EmployeeNoFound("Employee of Id "+utilToken.decodeToken(token)+" is not present");	
 		}else {
 			empData.setName(employeedto.getName());
 			empData.setSalary(employeedto.getSalary());
@@ -80,8 +83,10 @@ public class EmployeeServices implements IEmployeeServices{
 		
 	}
 
-	/*@Override
-	public List<EmployeePayrollData> findEmployeeByDepatment(String department) {
-		return employeeList.findEmployeeByDepatment(department) ;
-	}*/
+	@Override
+	public List<EmployeePayrollData> findByDepatment(String department) {
+		List<EmployeePayrollData> empList = new ArrayList<>();
+		employeeList.findByDepatment(department).forEach(empList::add);
+		return empList;
+	}
 }

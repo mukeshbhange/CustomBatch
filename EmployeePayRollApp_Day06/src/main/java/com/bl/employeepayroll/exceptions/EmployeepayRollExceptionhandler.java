@@ -1,6 +1,7 @@
 package com.bl.employeepayroll.exceptions;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
@@ -29,17 +30,22 @@ public class EmployeepayRollExceptionhandler {
 		return new ResponseEntity<ResponseDTO>(responsedto,HttpStatus.BAD_REQUEST);
 	}
 	
-	@ExceptionHandler(EmployeePayRollExceptions.class)
-	public ResponseEntity<ResponseDTO> handleEmployeePayRollException(EmployeePayRollExceptions exception){
-		ResponseDTO responsedto = new ResponseDTO("Eception While Proceesg RestRequest",exception.getMessage());
-		return new ResponseEntity<ResponseDTO>(responsedto,HttpStatus.BAD_REQUEST);	
-	}
-	
 	@ExceptionHandler(MethodArgumentNotValidException.class)
 	public ResponseEntity<ResponseDTO> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception){
 		List<ObjectError> errorList =exception.getBindingResult().getAllErrors();
 		List<String> errMsg =errorList.stream().map(objErr->objErr.getDefaultMessage()).collect(Collectors.toList());
 		ResponseDTO responseDTO = new ResponseDTO("Exception while processing REST request",errMsg);
 		return new ResponseEntity<ResponseDTO>(responseDTO,HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(NoSuchElementException.class)
+	public ResponseEntity<ResponseDTO> handleEmployeeNotFoundException(NoSuchElementException exception){
+		ResponseDTO responsedto = new ResponseDTO("Eception While Proceesg RestRequest",exception.getMessage());
+		return new ResponseEntity<ResponseDTO>(responsedto,HttpStatus.BAD_REQUEST);	
+	}
+	
+	@ExceptionHandler(EmployeeNoFound.class)
+	public ResponseEntity<String> handleEmployeeNoFound(EmployeeNoFound exception){
+		return new ResponseEntity<String>(exception.getMessage(),HttpStatus.NOT_FOUND);
 	}
 }

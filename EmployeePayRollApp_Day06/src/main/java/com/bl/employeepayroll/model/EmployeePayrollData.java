@@ -33,7 +33,7 @@ public class EmployeePayrollData {
 	private long salary;
 
 	@ElementCollection
-	@CollectionTable(name = "Employee_departments",joinColumns = @JoinColumn(name="employeeId"))
+	@CollectionTable(name = "Employee_departments",joinColumns = @JoinColumn(name="id"))
 	@Column(name="department")
 	private List<String> departments;
 	
