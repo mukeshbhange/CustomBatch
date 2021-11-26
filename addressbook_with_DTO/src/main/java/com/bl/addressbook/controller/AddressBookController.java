@@ -2,6 +2,11 @@ package com.bl.addressbook.controller;
 
 
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,7 +57,7 @@ public class AddressBookController {
 	}
 	
 	@PostMapping("/add")
-	public ResponseEntity<Response> addUser(@RequestBody UserDTO user) {
+	public ResponseEntity<Response> addUser(@Valid @RequestBody UserDTO user) {
 		UserData userdata = services.addUserData(user);
 		Response response = new Response((long)200,"User Added SuccessFully",uToken.createToken(userdata.getUser_id()));
 		return new ResponseEntity<Response>(response,HttpStatus.OK);
@@ -67,7 +72,7 @@ public class AddressBookController {
 	}
 	
 	@PutMapping("/edit")
-	public ResponseEntity<Response> update(@RequestBody UserData userData,@RequestHeader String token) throws UserNotFoundException {
+	public ResponseEntity<Response> update(@Valid @RequestBody UserData userData,@RequestHeader String token) throws UserNotFoundException {
 		Response response = new Response((long)200,"User Updated Successfully", services.updateUser(token,userData));
 		return new ResponseEntity<Response>(response,HttpStatus.OK);
 		

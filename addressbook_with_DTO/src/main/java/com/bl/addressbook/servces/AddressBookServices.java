@@ -1,10 +1,12 @@
 package com.bl.addressbook.servces;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bl.addressbook.dto.UserDTO;
+import com.bl.addressbook.exceptions.AddressBookExceptions;
 import com.bl.addressbook.exceptions.UserNotFoundException;
 import com.bl.addressbook.model.Address;
 import com.bl.addressbook.model.UserData;
@@ -48,19 +50,26 @@ public class AddressBookServices implements IAddressBookServices {
 			userRepo.deleteById(uToken.decodeToken(token));
 			return deleted;
 		}else {
-			throw new UserNotFoundException((long)400,"Employee Not Found");
+			throw new AddressBookExceptions(" "+uToken.decodeToken(token)+" Id is not Present");
 		}
 	}
 
 	@Override
 	public List<UserData> getAllUsers() {
-		return userRepo.findAll();
+		
+		List<UserData> userData = new ArrayList<>();
+		userRepo.findAll().forEach(userData::add);
+		if(userData.isEmpty()) {
+			throw new AddressBookExceptions("No Data Present in Database,First Add Data");
+		}else {
+			return userData;
+		}
 	}
 
 	@Override
 	public UserData getOne(String token) throws UserNotFoundException {
 		if(userRepo.findById(uToken.decodeToken(token)).isEmpty()) {
-			throw new UserNotFoundException((long)400,"User Not Found");
+			throw new AddressBookExceptions(" "+uToken.decodeToken(token)+" Id is not Present");
 		}else {
 			return userRepo.findById(uToken.decodeToken(token)).get();
 			
@@ -92,9 +101,8 @@ public class AddressBookServices implements IAddressBookServices {
 			
 			return found_user;
 		}else {
-			new UserNotFoundException((long)400,"User Not Present to Update");
+			throw new AddressBookExceptions(" "+uToken.decodeToken(token)+" Id is not Present");
 		}
-		return null;
 	}
 
 

@@ -11,7 +11,7 @@ import lombok.Data;
 @Component
 public class Response {
 	private long statusCode;
-	private String message;
+	private Object message;
 	private Object token;
 	
 	public Response() {
