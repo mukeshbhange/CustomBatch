@@ -1,6 +1,7 @@
 package com.bl.addressbook.dto;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 import com.bl.addressbook.model.Address;
@@ -18,12 +19,16 @@ public class UserDTO {
 	@Pattern(regexp="^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$",message="Email is not in proper format")
 	public String email;
 	
+	
+	@NotBlank
+	public String password;
+	
 	@Pattern(regexp="^(\\+\\d{1,3}[- ]?)?\\d{10}$",message="Mobile is not in proper format")
 	public String mobileNo;
 	
 	@Pattern(regexp="male|female",message="Gender Should be male or female")
 	public String gender;
 	
-	@NotEmpty
+	@Valid
 	public Address address;
 }

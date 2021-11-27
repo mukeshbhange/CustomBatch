@@ -3,7 +3,9 @@ package com.bl.addressbook.servces;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import com.bl.addressbook.dto.UserDTO;
 import com.bl.addressbook.exceptions.AddressBookExceptions;
@@ -13,7 +15,7 @@ import com.bl.addressbook.model.UserData;
 import com.bl.addressbook.repository.UserDataRepo;
 import com.bl.addressbook.util.JwtUtil;
 
-
+@Validated
 @Service
 public class AddressBookServices implements IAddressBookServices {
 	
@@ -25,21 +27,17 @@ public class AddressBookServices implements IAddressBookServices {
 	
 	@Override
 	public UserData addUserData(UserDTO userDTO) {
-		UserData userData = new UserData(userDTO);
-		Address address = userData.getAddress();
-		
-		address.setId(userData.getAddress().getId());
-		address.setLandmark(userData.getAddress().getLandmark());
-		address.setCity(userDTO.getAddress().getCity());
-		address.setState(userDTO.getAddress().getState());
-		address.setCountry(userDTO.getAddress().getCountry());
-		address.setPinCode(userDTO.getAddress().getPinCode());
-		
-		address.setUser(userData);
-		userData.setAddress(address);
-		
-		userRepo.save(userData);
-		return userData;
+		if(userRepo.findByEmail(userDTO.email) == null) {
+			throw new AddressBookExceptions(userDTO.email+" this email is already present,Please Use another one");
+		}else {
+			UserData userData = new UserData(userDTO);
+			Address address = userData.getAddress();
+			address.setUser(userData);
+			userData.setAddress(address);
+
+			userRepo.save(userData);
+			return userData;
+		}
 	}
 
 
@@ -106,5 +104,40 @@ public class AddressBookServices implements IAddressBookServices {
 	}
 
 
-	
+	@Override
+	public List<UserData> usersByCity(String city) {
+		List<UserData> userByCityList =  userRepo.usersByCity(city);
+		
+		if(userByCityList.isEmpty()) {
+			throw new AddressBookExceptions("No User Present in "+city+"city");
+		}else {
+			return userByCityList;
+		}
+	}
+
+
+	@Override
+	public List<UserData> allUsersSortedByName() {
+		List<UserData> sortedList = userRepo.findAll(Sort.by(Sort.Direction.ASC,"name"));
+		if(sortedList.isEmpty()) {
+			throw new AddressBookExceptions("No Data Present in Database,First Add Data");
+		}else {
+			return sortedList;
+		}
+	}
+
+
+	@Override
+	public Object loginToAddressBook(String email, String password) throws AddressBookExceptions {
+		UserData user = userRepo.findByEmail(email);
+		if(user != null) {
+			if(password.equals(user.getPassword())) {
+				return uToken.createToken(user.getUser_id());
+			}else {
+				throw new AddressBookExceptions("Password is Wrong for this User");
+			}
+		}else {
+			throw new AddressBookExceptions("No Such Email present in AddressBook");
+		}
+	}
 }

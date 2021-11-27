@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.bl.employeepayroll.dto.EmployeeDTO;
 import com.bl.employeepayroll.dto.ResponseDTO;
@@ -75,5 +76,11 @@ public class EmployeePayRollController {
 		empData = employeeServices.findByDepatment(department);
 		ResponseDTO resdto =new ResponseDTO("Got Departments Successfully",empData);
 		return new ResponseEntity<ResponseDTO>(resdto,HttpStatus.OK);		
+	}
+	
+	@RequestMapping("/login")
+	public ResponseEntity<ResponseDTO> loginToEmployeePayroll(@RequestParam String email,@RequestParam String password) {
+		ResponseDTO resdto =new ResponseDTO("LogIn Successfully ",employeeServices.login(email,password));
+		return new ResponseEntity<ResponseDTO>(resdto,HttpStatus.OK);	
 	}
 }

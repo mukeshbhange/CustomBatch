@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-public class EmployeeNoFound extends RuntimeException{
+public class EmployeePayrollException extends RuntimeException{
 	
 	/**
 	 * 

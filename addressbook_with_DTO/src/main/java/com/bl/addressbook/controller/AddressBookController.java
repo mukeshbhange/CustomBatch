@@ -1,15 +1,11 @@
 package com.bl.addressbook.controller;
 
-
-
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,17 +13,18 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bl.addressbook.dto.ResponseDTO;
 import com.bl.addressbook.dto.UserDTO;
 import com.bl.addressbook.exceptions.AddressBookExceptions;
-import com.bl.addressbook.exceptions.UserNotFoundException;
 import com.bl.addressbook.model.UserData;
-import com.bl.addressbook.response.Response;
 import com.bl.addressbook.servces.IAddressBookServices;
 import com.bl.addressbook.util.JwtUtil;
 
 @RestController
+@Validated
 @RequestMapping("/addressbook")
 public class AddressBookController {
 	
@@ -35,46 +32,65 @@ public class AddressBookController {
 	@Autowired
 	JwtUtil uToken;
 	
-	
 	@Autowired
 	IAddressBookServices services;
 	
 	@GetMapping("/getall")
-	public ResponseEntity<Response> getAll() {
+	public ResponseEntity<ResponseDTO> getAll() {
 		if(services.getAllUsers().isEmpty()) {
 			throw new AddressBookExceptions("No Address in Database");
 		}else {
-			Response response =  new Response((long)200,"Got All Data",services.getAllUsers());	
-			return new ResponseEntity<Response>(response,HttpStatus.OK);
+			ResponseDTO response =  new ResponseDTO("Got All Data",services.getAllUsers());	
+			return new ResponseEntity<ResponseDTO>(response,HttpStatus.OK);
 		}
 	}
 	
+	@GetMapping("/getall/sorted")
+	public ResponseEntity<ResponseDTO> allUsersSortedByName() {
+
+		ResponseDTO response =  new ResponseDTO("Got All Data",services.allUsersSortedByName());	
+		return new ResponseEntity<ResponseDTO>(response,HttpStatus.OK);
+	}
+
 	@GetMapping("get")
-	public ResponseEntity<Response> getUser(@RequestHeader String token) throws UserNotFoundException {
-		Response response =  new Response((long)200,"Fetched User Data",services.getOne(token));
-		return new ResponseEntity<Response>(response,HttpStatus.OK);
+	public ResponseEntity<ResponseDTO> getUser(@RequestHeader String token) {
+		ResponseDTO response =  new ResponseDTO("Fetched User Data",services.getOne(token));
+		return new ResponseEntity<ResponseDTO>(response,HttpStatus.OK);
 
 	}
 	
 	@PostMapping("/add")
-	public ResponseEntity<Response> addUser(@Valid @RequestBody UserDTO user) {
+	public ResponseEntity<ResponseDTO> addUser(@Valid @RequestBody UserDTO user) {
 		UserData userdata = services.addUserData(user);
-		Response response = new Response((long)200,"User Added SuccessFully",uToken.createToken(userdata.getUser_id()));
-		return new ResponseEntity<Response>(response,HttpStatus.OK);
+		ResponseDTO responseDTO = new ResponseDTO("User Added SuccessFully",userdata,uToken.createToken(userdata.getUser_id()));
+		return new ResponseEntity<ResponseDTO>(responseDTO,HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/delete")
-	public ResponseEntity<Response> delete(@RequestHeader String token) throws UserNotFoundException{
+	public ResponseEntity<ResponseDTO> delete(@RequestHeader String token){
 		 UserData deleteddata = services.deleteUser(token);
-		 Response response = new Response((long)200,"User Deleted SuccessFully",deleteddata);
-		return new ResponseEntity<Response>(response,HttpStatus.OK);
+		 ResponseDTO response = new ResponseDTO("User Deleted SuccessFully",deleteddata);
+		return new ResponseEntity<ResponseDTO>(response,HttpStatus.OK);
 
 	}
 	
 	@PutMapping("/edit")
-	public ResponseEntity<Response> update(@Valid @RequestBody UserData userData,@RequestHeader String token) throws UserNotFoundException {
-		Response response = new Response((long)200,"User Updated Successfully", services.updateUser(token,userData));
-		return new ResponseEntity<Response>(response,HttpStatus.OK);
+	public ResponseEntity<ResponseDTO> update(@Valid @RequestBody UserData userData,@RequestHeader String token){
+		UserData data = services.updateUser(token,userData);
+		ResponseDTO response = new ResponseDTO("User Updated Successfully",data);
+		return new ResponseEntity<ResponseDTO>(response,HttpStatus.OK);
 		
+	}
+	
+	@GetMapping("/getcity")
+	public ResponseEntity<ResponseDTO> getByCity(@RequestParam String city ){
+		ResponseDTO response =  new ResponseDTO("Got All Data",services.usersByCity(city));	
+		return new ResponseEntity<ResponseDTO>(response,HttpStatus.OK);
+	}
+	
+	@GetMapping("/login")
+	public ResponseEntity<ResponseDTO> login(@RequestParam String email,@RequestParam String password){
+		ResponseDTO response =  new ResponseDTO("LogIn is SuccessFull",services.loginToAddressBook(email,password));	
+		return new ResponseEntity<ResponseDTO>(response,HttpStatus.OK);
 	}
 }

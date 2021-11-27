@@ -13,8 +13,6 @@ public class UserNotFoundException extends RuntimeException{
 	public long errorCode;
 	public String message;
 	
-	
-	
 	public UserNotFoundException() {
 		
 	}

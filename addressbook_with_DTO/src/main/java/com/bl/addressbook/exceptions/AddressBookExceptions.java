@@ -11,7 +11,11 @@ public class AddressBookExceptions extends RuntimeException {
 	private static final long serialVersionUID = -7156858546047738725L;
 	public String message;
 	
-	public AddressBookExceptions() {
-		
+	public String getMessage() {
+		return message;
+	}
+	
+	public void setMessage(String message) {
+		this.message = message;
 	}
 }

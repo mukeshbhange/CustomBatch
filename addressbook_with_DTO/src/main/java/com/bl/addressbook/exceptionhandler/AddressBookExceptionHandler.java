@@ -12,6 +12,7 @@ import com.bl.addressbook.exceptions.UserNotFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -29,8 +30,8 @@ public class AddressBookExceptionHandler {
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	public ResponseEntity<ResponseDTO> handleMessageNotReadableException(HttpMessageNotReadableException exception){
 		
-		log.error("Invalid date Format.",exception);
-		ResponseDTO responsedto = new ResponseDTO(message,"Date should be in dd MMM yyyy format");
+		log.error("Invalid For Format for User.",exception);
+		ResponseDTO responsedto = new ResponseDTO(message,"Invalid Format of User data");
 		return new ResponseEntity<ResponseDTO>(responsedto,HttpStatus.BAD_REQUEST);
 	}
 	
@@ -41,8 +42,7 @@ public class AddressBookExceptionHandler {
 		ResponseDTO responseDTO = new ResponseDTO("Exception while processing REST request",errMsg);
 		return new ResponseEntity<ResponseDTO>(responseDTO,HttpStatus.BAD_REQUEST);
 	}
-	
-	
+
 	@Value(value= "User Not Found Exception")
 	private String message1;
 	

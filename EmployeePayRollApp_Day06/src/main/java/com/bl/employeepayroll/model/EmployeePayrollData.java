@@ -26,6 +26,8 @@ public class EmployeePayrollData {
 	private long employeeId;
 	
 	private String name;
+	private String email;
+	private String password;
 	private String gender;
 	private String note;
 	private LocalDate startDate;
@@ -39,6 +41,8 @@ public class EmployeePayrollData {
 	
 	public EmployeePayrollData(EmployeeDTO empdto) {
 		this.name = empdto.getName();
+		this.email = empdto.getEmail();
+		this.password = empdto.getPassword();
 		this.salary = empdto.getSalary();
 		this.gender = empdto.getGender();
 		this.note = empdto.getNote();

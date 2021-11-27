@@ -44,8 +44,8 @@ public class EmployeepayRollExceptionhandler {
 		return new ResponseEntity<ResponseDTO>(responsedto,HttpStatus.BAD_REQUEST);	
 	}
 	
-	@ExceptionHandler(EmployeeNoFound.class)
-	public ResponseEntity<String> handleEmployeeNoFound(EmployeeNoFound exception){
+	@ExceptionHandler(EmployeePayrollException.class)
+	public ResponseEntity<String> handleEmployeeNoFound(EmployeePayrollException exception){
 		return new ResponseEntity<String>(exception.getMessage(),HttpStatus.NOT_FOUND);
 	}
 }

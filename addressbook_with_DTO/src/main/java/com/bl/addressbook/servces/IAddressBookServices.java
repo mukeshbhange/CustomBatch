@@ -18,4 +18,10 @@ public interface IAddressBookServices {
 
 	UserData addUserData(UserDTO user);
 
+	List<UserData> usersByCity(String city);
+
+	List<UserData> allUsersSortedByName();
+
+	Object loginToAddressBook(String email, String password);
+
 }

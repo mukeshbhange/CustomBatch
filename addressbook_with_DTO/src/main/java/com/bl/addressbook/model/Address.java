@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Pattern;
 
 import com.bl.addressbook.dto.AddressDTO;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -25,7 +26,9 @@ public class Address {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
+	@Pattern( regexp="^[A-Z]{1}[a-zA-Z\\s]{2,}$",message = "First Letter of Landmark Must be capital")
 	private String landmark;
+	
 	private String city;
 	private String state;
 	private String country;
@@ -40,9 +43,8 @@ public class Address {
 	public Address() {
 		
 	}
-
+	
 	public Address(AddressDTO addressDTO) {
-		super();
 		this.landmark = addressDTO.landmark;
 		this.city = addressDTO.city;
 		this.state = addressDTO.state;

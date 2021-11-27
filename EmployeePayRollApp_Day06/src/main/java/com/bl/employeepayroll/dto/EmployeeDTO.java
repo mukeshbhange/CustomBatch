@@ -16,6 +16,13 @@ public class EmployeeDTO {
 	@Pattern( regexp="^[A-Z]{1}[a-zA-Z\\s]{2,}$",message = "First Letter of Name Must be capital")
 	private String name;
 	
+	
+	@Pattern(regexp="^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$",message="Email is not in proper format")
+	private String email;
+	
+	@NotBlank(message="password cant be BLANK")
+	private String password;
+	
 	@Min(value=500,message="cannot less than 500")
 	private long salary;
 	

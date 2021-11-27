@@ -7,7 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.bl.employeepayroll.dto.EmployeeDTO;
-import com.bl.employeepayroll.exceptions.EmployeeNoFound;
+import com.bl.employeepayroll.exceptions.EmployeePayrollException;
 import com.bl.employeepayroll.model.EmployeePayrollData;
 import com.bl.employeepayroll.repository.IEmployeeRepo;
 import com.bl.employeepayroll.util.TokenUtil;
@@ -27,17 +27,22 @@ public class EmployeeServices implements IEmployeeServices{
 		List<EmployeePayrollData> empList = new ArrayList<>();
 		employeeList.findAll().forEach(empList::add);
 		if(empList.isEmpty()) {
-			throw new EmployeeNoFound("No Employee Present,First Add Employee Data");
+			throw new EmployeePayrollException("No Employee Present,First Add Employee Data");
 		}
 		return empList;
 	}
 
 	@Override
 	public EmployeePayrollData addEmployeePayrollData(EmployeeDTO employeedto) {
-		EmployeePayrollData empData = null;
-		empData = new EmployeePayrollData(employeedto);
-		employeeList.save(empData);
-		return empData;
+		if(employeeList.findByEmployeeByEmail(employeedto.getEmail()) != null) {
+			EmployeePayrollData empData = null;
+			empData = new EmployeePayrollData(employeedto);
+			employeeList.save(empData);
+			return empData;
+			
+		}else {
+			throw new EmployeePayrollException(employeedto.getEmail()+" Email Already is already present");
+		}
 	}
 
 	@Override
@@ -46,7 +51,7 @@ public class EmployeeServices implements IEmployeeServices{
 		if(ispresent.isPresent()) {
 			return ispresent.get();	
 		}else {
-			throw new EmployeeNoFound("Employee of Id "+utilToken.decodeToken(token)+" is not present");
+			throw new EmployeePayrollException("Employee of Id "+utilToken.decodeToken(token)+" is not present");
 		}
 	}
 
@@ -58,7 +63,7 @@ public class EmployeeServices implements IEmployeeServices{
 			 	employeeList.deleteById(utilToken.decodeToken(token));
 
 		}else {
-			throw new EmployeeNoFound("Employee of Id "+utilToken.decodeToken(token)+" is not present");
+			throw new EmployeePayrollException("Employee of Id "+utilToken.decodeToken(token)+" is not present");
 			}
 	}
 
@@ -67,7 +72,7 @@ public class EmployeeServices implements IEmployeeServices{
 		EmployeePayrollData empData = this.getEmployeePayrollDataById(token);
 		
 		if(employeeList.findById(utilToken.decodeToken(token)).isEmpty()) {
-			throw new EmployeeNoFound("Employee of Id "+utilToken.decodeToken(token)+" is not present");	
+			throw new EmployeePayrollException("Employee of Id "+utilToken.decodeToken(token)+" is not present");	
 		}else {
 			empData.setName(employeedto.getName());
 			empData.setSalary(employeedto.getSalary());
@@ -86,7 +91,25 @@ public class EmployeeServices implements IEmployeeServices{
 	@Override
 	public List<EmployeePayrollData> findByDepatment(String department) {
 		List<EmployeePayrollData> empList = new ArrayList<>();
-		employeeList.findByDepatment(department).forEach(empList::add);
-		return empList;
+		if(empList.isEmpty()) {
+			throw new EmployeePayrollException("No Employee in that Department");
+		}else {
+			employeeList.findByDepatment(department).forEach(empList::add);
+			return empList;
+		}
+	}
+
+	@Override
+	public Object login(String email, String password) {
+		EmployeePayrollData employee = employeeList.findByEmployeeByEmail(email);
+		if(employee != null) {
+			if(email.equals(employee.getPassword())) {
+				return utilToken.createToken(employee.getEmployeeId());
+			}else {
+				throw new EmployeePayrollException("Password is Wrong ..plz Check");
+			}
+		}else {
+			throw new EmployeePayrollException("This Email is Not present in EmployeePayroll");
+		}
 	}
 }
