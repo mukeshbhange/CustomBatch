@@ -1,7 +1,19 @@
 package com.bl.lms.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.batch.core.BatchStatus;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobParameter;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersInvalidException;
+import org.springframework.batch.core.launch.JobLauncher;
+import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bl.lms.dto.ForgotPass;
@@ -24,6 +37,12 @@ import com.bl.lms.services.LMSServices;
 
 @RestController
 public class LMS_Controller {
+	
+	@Autowired
+    JobLauncher jobLauncher;
+    
+    @Autowired
+    Job job;
 	
 	@Autowired
 	LMSServices lmsServices;
@@ -80,7 +99,32 @@ public class LMS_Controller {
 		return new ResponseEntity<Response>(response,HttpStatus.OK);
 	}
 	
+	@PostMapping("/reset/{token}")
+	ResponseEntity<Response> resetpass( @RequestParam String password, @PathVariable String token) throws UserNotFoundException {
+		Response response = lmsServices.resetPassword(password, token);
+		return new ResponseEntity<Response>(response, HttpStatus.OK);
+	}
 	
 	
+
+
+	@GetMapping("/loadcv")
+	public BatchStatus load() throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {
+
+		Map<String, JobParameter> maps = new HashMap<>();
+		JobParameters parameters = new JobParameters(maps);
+		JobExecution jobExecution = jobLauncher.run(job, parameters);
+
+		System.out.println("JobExecution: " + jobExecution.getStatus());
+
+		System.out.println("Batch is Running...");
+		System.out.println("kk");
+		while (jobExecution.isRunning()) {
+			System.out.println("...");
+		}
+
+		return jobExecution.getStatus();
+	}
+
 
 }

@@ -12,6 +12,5 @@ public class LMS_UserDTO {
 	private String mobile;
 	private String emailId;
 	private String profilePath;
-	private Boolean status;
 	private String password;
 }

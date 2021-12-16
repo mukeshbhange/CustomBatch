@@ -26,7 +26,7 @@ public class LMS_User {
 	private String emailId;
 	private String mobile;
 	private String profilePath;
-	private Boolean status;
+	private boolean status;
 	private String password;
 	
 	private LocalDateTime createStamp;

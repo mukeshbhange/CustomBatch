@@ -144,11 +144,33 @@ public class LMSServices implements ILMSServices {
 			sendigemail.setMailFrom("bhangemukesh98@gmail.com");
 			sendigemail.setMailSubject("forgot password Link");
 			String token = tokenutil.createToken((isPresent.get().getId()));
-			sendigemail.setMailBody(mailServices.getLink("http://localhost:8083/reset/", isPresent.get().getId()));
+			sendigemail.setMailBody(mailServices.getLink("http://localhost:8883/reset/", isPresent.get().getId()));
 			mailServices.send(sendigemail.getMailTo(),sendigemail.getMailSubject(),sendigemail.getMailBody());
 			return new Response("link is sent.....",(long)200, token);
 		}else {
 			throw new UserNotFoundException("This User is not Present at this Database");
 		}
+	}
+
+	@SuppressWarnings("static-access")
+	public Response resetPassword(String password2, String token) throws UserNotFoundException {
+		long id = tokenutil.decodeToken(token);
+		System.out.println(id);
+		Optional<LMS_User> user = userRepo.findById(id);
+		System.out.println(user.get());
+		if(user.isPresent()) {
+			user.get().setPassword(password2);
+			user.get().setUpdateStamp(LocalDateTime.now());
+			sendigemail.setMailTo(user.get().getEmailId());
+			sendigemail.setMailFrom("bhangemukesh98@gmail.com");
+			sendigemail.setMailSubject("Password Changed Successfully");
+			sendigemail.setMailBody("Password Reset Successfully...!");
+			mailServices.send(sendigemail.getMailTo(),sendigemail.getMailSubject(),sendigemail.getMailBody());
+			userRepo.save(user.get());
+			return new Response("New Password Saved SuccessFully....!",(long)200);
+			
+		}else {
+			throw new UserNotFoundException("This User is not Present at this Database");
+		}	
 	}
 }
