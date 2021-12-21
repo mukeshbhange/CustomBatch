@@ -2,10 +2,8 @@ package com.bl.lms.entity;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.bl.lms.dto.LMS_UserDTO;
 
@@ -13,12 +11,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Entity
+@Document(collection = "user")
 @NoArgsConstructor
 public class LMS_User {
 	
+	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	private String firstName;
@@ -34,6 +32,7 @@ public class LMS_User {
 	
 	public LMS_User(LMS_UserDTO userDTO) {
 		super();
+		this.id = userDTO.getId();
 		this.firstName=userDTO.getFirstName();
 		this.lastName = userDTO.getLastName();
 		this.emailId=userDTO.getEmailId();

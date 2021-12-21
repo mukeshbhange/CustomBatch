@@ -21,6 +21,7 @@ public class OnboardingServices implements IOnboardingServices{
 	@Autowired
 	private OnboardingRepo onboardingRepo;
 	
+	@SuppressWarnings("unused")
 	@Autowired
 	private MailServices mailServices;
 
@@ -30,12 +31,6 @@ public class OnboardingServices implements IOnboardingServices{
 			Onboarding onboardingUser = new Onboarding(user);
 			BankInfo bankInfo = user.getBankInfo();
 			QualificationInfo qualifiInfo = user.getQualificationInfo();
-			
-			onboardingUser.setBankInfo(bankInfo);
-			onboardingUser.setQualificationInfo(qualifiInfo);
-			
-			bankInfo.setOnboarding(onboardingUser);
-			qualifiInfo.setOnboarding(onboardingUser);
 			
 			return onboardingRepo.save(onboardingUser);
 		}else {
@@ -119,9 +114,6 @@ public class OnboardingServices implements IOnboardingServices{
 				
 				onboardCandidate.setBankInfo(bankInfo);
 				onboardCandidate.setQualificationInfo(qualifiInfo);
-				
-				bankInfo.setOnboarding(onboardCandidate);
-				qualifiInfo.setOnboarding(onboardCandidate);
 				
 				return onboardingRepo.save(onboardCandidate);
 				

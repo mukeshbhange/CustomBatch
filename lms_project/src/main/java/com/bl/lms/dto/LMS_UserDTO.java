@@ -7,6 +7,8 @@ import lombok.Data;
 @AllArgsConstructor
 public class LMS_UserDTO {
 	
+	
+	private long id;
 	private String firstName;
 	private String lastName;
 	private String mobile;

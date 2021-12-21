@@ -1,10 +1,10 @@
 package com.bl.candidate.model;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.bl.candidate.dto.CandidateDTO;
 
@@ -15,11 +15,10 @@ import lombok.ToString;
 @Data
 @NoArgsConstructor
 @ToString
-@Entity
+@Document(collection = "candidate")
 public class Candidate {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long candidateId;
 	
 	private String firstName;
@@ -42,6 +41,7 @@ public class Candidate {
 	private int permanentPincode;
 	
 	public Candidate(CandidateDTO candidate) {
+		this.candidateId =candidate.getId();
 		this.firstName = candidate.getFirstName();
 		this.middleName = candidate.getMiddleName();
 		this.lastName = candidate.getLastName();

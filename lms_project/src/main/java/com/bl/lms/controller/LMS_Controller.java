@@ -122,7 +122,6 @@ public class LMS_Controller {
 		while (jobExecution.isRunning()) {
 			System.out.println("...");
 		}
-
 		return jobExecution.getStatus();
 	}
 

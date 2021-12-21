@@ -1,15 +1,9 @@
 package com.bl.onboarding.model;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.bl.onboarding.dto.OnboardingDTO;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,11 +12,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
+@Document(collection = "onboarding")
 public class Onboarding {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
 	private String firstName;
@@ -41,18 +34,12 @@ public class Onboarding {
 	private String folderId;
 	private String status;
 	
-	
-	@OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "onboarding")
-	@JsonManagedReference
 	private BankInfo bankInfo;
-	
-
-	@OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "onboarding")
-	@JsonManagedReference
 	private QualificationInfo qualificationInfo;
 	
 	
 	public Onboarding(OnboardingDTO onboardingDTO) {
+		this.id = onboardingDTO.getId();
 		this.firstName = onboardingDTO.getFirstName();
 		this.middleName = onboardingDTO.getMiddleName();
 		this.lastName = onboardingDTO.getLastName();

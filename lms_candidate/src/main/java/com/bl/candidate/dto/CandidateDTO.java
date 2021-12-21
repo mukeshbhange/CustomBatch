@@ -13,6 +13,7 @@ import lombok.ToString;
 @ToString
 public class CandidateDTO {
 	
+	private long id;
 	private String firstName;
 	private String middleName;
 	private String lastName;

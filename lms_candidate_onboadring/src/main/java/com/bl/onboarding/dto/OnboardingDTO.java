@@ -4,7 +4,6 @@ package com.bl.onboarding.dto;
 
 import com.bl.onboarding.model.BankInfo;
 import com.bl.onboarding.model.QualificationInfo;
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,6 +15,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class OnboardingDTO {
 	
+	
+	private long id;
 	private String firstName;
 	private String middleName;
 	private String lastName;

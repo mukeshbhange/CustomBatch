@@ -68,8 +68,7 @@ public class BatchConfig {
 
         lineTokenizer.setDelimiter(",");
         lineTokenizer.setStrict(false);
-        lineTokenizer.setNames(new String[]{"firstName", "lastName", "emailId", "mobile","profilePath","password"});
-
+        lineTokenizer.setNames("firstName", "lastName", "emailId", "mobile","profilePath","password");
         BeanWrapperFieldSetMapper<LMS_User> fieldSetMapper = new BeanWrapperFieldSetMapper<>();
         fieldSetMapper.setTargetType(LMS_User.class);
 
