@@ -34,6 +34,7 @@ import com.bl.lms.exception.LoginException;
 import com.bl.lms.exception.UserNotFoundException;
 import com.bl.lms.response.Response;
 import com.bl.lms.services.LMSServices;
+import com.bl.lms.util.TokenUtil;
 
 @RestController
 public class LMS_Controller {
@@ -46,6 +47,9 @@ public class LMS_Controller {
 	
 	@Autowired
 	LMSServices lmsServices;
+	
+	@Autowired
+	TokenUtil tokenutil;
 	
 	
 	@GetMapping("/login")
@@ -67,7 +71,7 @@ public class LMS_Controller {
 	@PostMapping("/add")
 	public ResponseEntity<Response> addUser(@RequestHeader String loginToken,@RequestBody LMS_UserDTO user) throws LoginException{
 		LMS_User savedUser =lmsServices.addUser(loginToken,user);
-		Response response = new Response("Added User SuccessFully",(long)200,savedUser);
+		Response response = new Response("Added User SuccessFully",(long)200,tokenutil.createToken(savedUser.getId()));
 		return new ResponseEntity<Response>(response,HttpStatus.CREATED);
 	}
 	
@@ -99,14 +103,18 @@ public class LMS_Controller {
 		return new ResponseEntity<Response>(response,HttpStatus.OK);
 	}
 	
+	@GetMapping("/verify")
+	ResponseEntity<Boolean> verifyUser(@RequestParam String token) throws UserNotFoundException, LoginException{
+		boolean verifiedUser = lmsServices.verifyUser(token);
+		return new ResponseEntity<Boolean>(verifiedUser,HttpStatus.OK);
+	}
+	
 	@PostMapping("/reset/{token}")
 	ResponseEntity<Response> resetpass( @RequestParam String password, @PathVariable String token) throws UserNotFoundException {
 		Response response = lmsServices.resetPassword(password, token);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
 	}
 	
-	
-
 
 	@GetMapping("/loadcv")
 	public BatchStatus load() throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {

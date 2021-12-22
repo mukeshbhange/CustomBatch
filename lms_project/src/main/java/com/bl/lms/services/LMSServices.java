@@ -173,4 +173,16 @@ public class LMSServices implements ILMSServices {
 			throw new UserNotFoundException("This User is not Present at this Database");
 		}	
 	}
+
+	public boolean verifyUser(String token) throws LoginException{
+		Optional<LMS_User> isPresent = userRepo.findById(tokenutil.decodeToken(token));
+		if(isPresent.isPresent()) {
+			isPresent.get().setStatus(true);
+			userRepo.save(isPresent.get());
+			return true;
+		}else {
+			throw new LoginException("Please log in first and use token...!");
+		}
+		
+	}
 }

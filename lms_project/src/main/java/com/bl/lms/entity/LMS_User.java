@@ -11,7 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Document(collection = "user")
+@Document(collection = "admin")
 @NoArgsConstructor
 public class LMS_User {
 	
