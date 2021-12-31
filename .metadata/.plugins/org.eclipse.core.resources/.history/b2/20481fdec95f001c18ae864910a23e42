@@ -1,0 +1,8 @@
+package com.bl.hirecandidate.services;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public class OnboardingServices implements IOnboardingServices{
+
+}

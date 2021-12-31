@@ -21,9 +21,9 @@ public class UserDTO {
 	
 	
 	@NotBlank
-	public String password;
+	public String password;	
 	
-	@Pattern(regexp="^(\\+\\d{1,3}[- ]?)?\\d{10}$",message="Mobile is not in proper format")
+	@Pattern(regexp="^[7-9]{1}[0-9]{9}$",message="Mobile is not in proper format")
 	public String mobileNo;
 	
 	@Pattern(regexp="male|female",message="Gender Should be male or female")

@@ -30,7 +30,7 @@ public class EmployeePayrollData {
 	private String password;
 	private String gender;
 	private String note;
-	private LocalDate startDate;
+	private String startDate;
 	private String profilePic;
 	private long salary;
 

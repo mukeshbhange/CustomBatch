@@ -1,0 +1,13 @@
+package com.bl.e_server;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class LmsEurekaserverApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(LmsEurekaserverApplication.class, args);
+	}
+
+}

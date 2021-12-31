@@ -1,0 +1,27 @@
+package com.bl.onboarding.services;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.bl.onboarding.dto.OnboardingDTO;
+import com.bl.onboarding.exception.LoginException;
+import com.bl.onboarding.model.Onboarding;
+import com.bl.onboarding.repository.OnboardingRepo;
+
+@Service
+public class OnboardingServices implements IOnboardingServices{
+	
+	@Autowired
+	private OnboardingRepo onboardingRepo;
+
+	@Override
+	public Onboarding addUserData(String loginToken, OnboardingDTO user) throws LoginException {
+		if(!loginToken.isEmpty()) {
+			Onboarding onboardingUser = new Onboarding();
+			return onboardingRepo.save(onboardingUser);
+		}else {
+			throw new LoginException("Access Denied...!");
+		}
+	}
+
+}

@@ -1,0 +1,9 @@
+package com.bl.onboarding.services;
+
+import com.bl.onboarding.model.Onboarding;
+
+public interface IOnboardingServices {
+
+	Onboarding addUserData(String loginToken, Onboarding user);
+
+}

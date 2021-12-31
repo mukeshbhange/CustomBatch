@@ -1,0 +1,20 @@
+package com.bl.onboarding.services;
+
+import org.springframework.stereotype.Service;
+
+import com.bl.onboarding.model.Onboarding;
+
+@Service
+public class OnboardingServices implements IOnboardingServices{
+
+	@Override
+	public Onboarding addUserData(String loginToken, Onboarding user) {
+		if(!token.isEmpty()) {
+			Candidate hiredCandidate = new Candidate(user);
+			return candidateRepo.save(hiredCandidate);
+		}else {
+			throw new LoginException("Access Denied...!");
+		}
+	}
+
+}

@@ -16,8 +16,6 @@ public interface IEmployeeRepo extends JpaRepository<EmployeePayrollData,Long>{
 			,nativeQuery=true)
 	List<EmployeePayrollData> findByDepatment(String department);
 	
-	@Query(value="Select * from employee_payroll_data,employee_departments where"
-			+ "employee_payroll_data.employee_id = employee_departments.id And employee_payroll_data.email = ?1"
-			,nativeQuery=true)
+	@Query(value="Select * from employee_payroll_data where email = ?1",nativeQuery=true)
 	EmployeePayrollData findByEmployeeByEmail(String email);
 }

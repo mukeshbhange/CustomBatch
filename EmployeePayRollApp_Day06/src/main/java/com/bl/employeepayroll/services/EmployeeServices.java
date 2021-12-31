@@ -34,45 +34,40 @@ public class EmployeeServices implements IEmployeeServices{
 
 	@Override
 	public EmployeePayrollData addEmployeePayrollData(EmployeeDTO employeedto) {
-		if(employeeList.findByEmployeeByEmail(employeedto.getEmail()) != null) {
 			EmployeePayrollData empData = null;
 			empData = new EmployeePayrollData(employeedto);
 			employeeList.save(empData);
 			return empData;
-			
-		}else {
-			throw new EmployeePayrollException(employeedto.getEmail()+" Email Already is already present");
-		}
 	}
 
 	@Override
-	public EmployeePayrollData getEmployeePayrollDataById(String token) {
-		Optional<EmployeePayrollData> ispresent = employeeList.findById(utilToken.decodeToken(token));
+	public EmployeePayrollData getEmployeePayrollDataById(long id ) {
+		Optional<EmployeePayrollData> ispresent = employeeList.findById(id);
 		if(ispresent.isPresent()) {
 			return ispresent.get();	
 		}else {
-			throw new EmployeePayrollException("Employee of Id "+utilToken.decodeToken(token)+" is not present");
+			throw new EmployeePayrollException("Employee of Id "+id+" is not present");
 		}
 	}
 
 	@Override
-	public void deleteEmployeePayrollDataById(String token) {
+	public void deleteEmployeePayrollDataById(Long id) {
 		
-		Optional<EmployeePayrollData> ispresent = employeeList.findById(utilToken.decodeToken(token));
+		Optional<EmployeePayrollData> ispresent = employeeList.findById(id);
 		if(!ispresent.isEmpty()) {
-			 	employeeList.deleteById(utilToken.decodeToken(token));
+			 	employeeList.deleteById(id);
 
 		}else {
-			throw new EmployeePayrollException("Employee of Id "+utilToken.decodeToken(token)+" is not present");
+			throw new EmployeePayrollException("Employee of Id "+id+" is not present");
 			}
 	}
 
 	@Override
-	public EmployeePayrollData updateEmployeePayrollDataById(String token,EmployeeDTO employeedto) {
-		EmployeePayrollData empData = this.getEmployeePayrollDataById(token);
+	public EmployeePayrollData updateEmployeePayrollDataById(long id,EmployeeDTO employeedto) {
+		EmployeePayrollData empData = this.getEmployeePayrollDataById(id);
 		
-		if(employeeList.findById(utilToken.decodeToken(token)).isEmpty()) {
-			throw new EmployeePayrollException("Employee of Id "+utilToken.decodeToken(token)+" is not present");	
+		if(employeeList.findById(id).isEmpty()) {
+			throw new EmployeePayrollException("Employee of Id "+id+" is not present");	
 		}else {
 			empData.setName(employeedto.getName());
 			empData.setSalary(employeedto.getSalary());

@@ -1,0 +1,9 @@
+package com.bl.candidate.services;
+
+import com.bl.candidate.model.Candidate;
+
+
+public interface ICandidateServices {
+	
+	Candidate addUser(String tokenoken,Candidate user)
+}

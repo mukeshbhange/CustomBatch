@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy element &apos;MailServices.java&apos; to &apos;lms_candidate_onboadring/src/main/java/com.bl.onboarding.services&apos;&#x0D;&#x0A;- Original project: &apos;lms_onboarding_service&apos;&#x0D;&#x0A;- Destination element: &apos;lms_candidate_onboadring/src/main/java/com.bl.onboarding.services&apos;&#x0D;&#x0A;- Original element: &apos;com.bl.hirecandidate.services.MailServices.java&apos;" description="Copy compilation unit" destination="=lms_candidate_onboadring/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/&lt;com.bl.onboarding.services" element1="/src\/main\/java=/optional=/true=/=/maven.pomderived=/true=/&lt;com.bl.hirecandidate.services{MailServices.java" files="0" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1639979183330" units="1" version="1.0"/>
+</session>

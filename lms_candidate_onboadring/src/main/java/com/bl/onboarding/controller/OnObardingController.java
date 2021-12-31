@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import com.bl.onboarding.dto.OnboardingDTO;
 import com.bl.onboarding.exception.LoginException;
@@ -25,52 +26,90 @@ import com.bl.onboarding.services.IOnboardingServices;
 @RequestMapping("/onboarding")
 class OnObardingController {
 	
+	
+	@Autowired
+	private RestTemplate restTemplate;
 	@Autowired
 	private IOnboardingServices onboardServices;
 	
 	@PostMapping("/add")
 	public ResponseEntity<Response> addUser(@RequestHeader String token,@RequestBody OnboardingDTO user) throws LoginException {
-		Onboarding userdata = onboardServices.addUserData(token,user);
-		Response response = new Response("User Added SuccessFully",(long)200, userdata);
-		return new ResponseEntity<Response>(response,HttpStatus.OK);
+		boolean isAdmin = restTemplate.getForObject("http://lms-admin/verify?token="+token,Boolean.class);
+		if(isAdmin) {
+			Onboarding userdata = onboardServices.addUserData(token,user);
+			Response response = new Response("User Added SuccessFully",(long)200, userdata);
+			return new ResponseEntity<Response>(response,HttpStatus.OK);
+		}else {
+			throw new LoginException("Not a admin token");
+		}
+		
+		
 	}
 	
 	@GetMapping("/get")
 	public ResponseEntity<Response> getProfile(@RequestHeader String token,@RequestHeader long id) throws LoginException, UserNotFoundException{
-		Onboarding profile =onboardServices.getOnboardingbyId(token,id);
-		Response response = new Response("Profile got SuccessFully",(long)200,profile);
-		return new ResponseEntity<Response>(response,HttpStatus.OK);
+		boolean isAdmin = restTemplate.getForObject("http://lms-admin/verify?token="+token,Boolean.class);
+
+		if(isAdmin) {
+			Onboarding profile =onboardServices.getOnboardingbyId(token,id);
+			Response response = new Response("Profile got SuccessFully",(long)200,profile);
+			return new ResponseEntity<Response>(response,HttpStatus.OK);
+		}else {
+			throw new LoginException("Not a admin token");
+		}
+		
 	}
 	
 	@DeleteMapping("/delete")
 	public ResponseEntity<Response> delete(@RequestHeader String token,@RequestHeader long id) throws LoginException, UserNotFoundException{
-		Onboarding profile =onboardServices.delete(token,id);
-		Response response = new Response("Profile got SuccessFully",(long)200,profile);
-		return new ResponseEntity<Response>(response,HttpStatus.OK);
+		boolean isAdmin = restTemplate.getForObject("http://lms-admin/verify?token="+token,Boolean.class);
+
+		if(isAdmin) {
+			Onboarding profile =onboardServices.delete(token,id);
+			Response response = new Response("Profile got SuccessFully",(long)200,profile);
+			return new ResponseEntity<Response>(response,HttpStatus.OK);
+		}else {
+			throw new LoginException("Not a admin token");
+		}
 	}
 	
 	@GetMapping("/all")
 	public ResponseEntity<Response> getAllCandidates(@RequestHeader String token) throws LoginException, UserNotFoundException{
-		List<Onboarding> allProfiles =onboardServices.getAllOnboardingStudent(token);
-		Response response = new Response("All Candidates got SuccessFully",(long)200,allProfiles);
-		return new ResponseEntity<Response>(response,HttpStatus.OK);
+		boolean isAdmin = restTemplate.getForObject("http://lms-admin/verify?token="+token,Boolean.class);
+
+		if(isAdmin) {
+			List<Onboarding> allProfiles =onboardServices.getAllOnboardingStudent(token);
+			Response response = new Response("All Candidates got SuccessFully",(long)200,allProfiles);
+			return new ResponseEntity<Response>(response,HttpStatus.OK);
+		}else {
+			throw new LoginException("Not a admin token");
+		}
+			
 	}
 	
 	@PutMapping("/edit")
 	public ResponseEntity<Response> editUser(@RequestHeader String token, @RequestHeader long id,  @RequestBody OnboardingDTO user) throws UserNotFoundException, LoginException {
-		Onboarding updatedUser = onboardServices.editUser(token, id, user);
-		Response response = new Response("Updated user successfully",(long)200, updatedUser);
-		return new ResponseEntity<Response>(response, HttpStatus.OK);
+		boolean isAdmin = restTemplate.getForObject("http://lms-admin/verify?token="+token,Boolean.class);
+
+		if(isAdmin) {
+			Onboarding updatedUser = onboardServices.editUser(token, id, user);
+			Response response = new Response("Updated user successfully",(long)200, updatedUser);
+			return new ResponseEntity<Response>(response, HttpStatus.OK);
+		}else {
+			throw new LoginException("Not a admin token");
+		}
 	}
 	
 	@GetMapping("/sendmail")
 	public ResponseEntity<Response> sendOfferMail(@RequestHeader String token, @RequestHeader String email) throws UserNotFoundException, LoginException {
+		boolean isAdmin = restTemplate.getForObject("http://lms-admin/verify?token="+token,Boolean.class);
+
+		if(isAdmin) {
 		onboardServices.sendOfferMail(token,email);
 		Response response = new Response("Sent Mail successfully",(long)200,email);
 		return new ResponseEntity<Response>(response, HttpStatus.OK);
+		}else {
+			throw new LoginException("Not a admin token");
+		}
 	}
-	
-	
-	
-
 }

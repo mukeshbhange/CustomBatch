@@ -1,0 +1,5 @@
+package com.bl.candidate.repository;
+
+public class CandidateRepository {
+
+}

@@ -1,0 +1,57 @@
+package com.bl.candidate.services;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.bl.candidate.dto.CandidateDTO;
+import com.bl.candidate.model.Candidate;
+import com.bl.candidate.repository.CandidateRepository;
+import com.bl.candidate.util.TokenUtil;
+
+
+
+@Service
+public class CandidateServices implements ICandidateServices {
+	
+	@Autowired
+	TokenUtil tokenutil;
+	
+	@Autowired
+	CandidateRepository candidateRepo;
+
+	@Override
+	public Candidate addUser(String token, CandidateDTO user) {
+		Candidate hiredCandidate = new Candidate(user);
+		
+		hiredCandidate.setFirstName(hiredCandidateDTO.getFirstName());
+		hiredCandidate.setLastName(hiredCandidateDTO.getLastName());
+		hiredCandidate.setMiddleName(hiredCandidateDTO.getMiddleName());
+		hiredCandidate.setEmail(hiredCandidateDTO.getEmail());
+		hiredCandidate.setMobileNumber(hiredCandidateDTO.getMobileNumber());
+		hiredCandidate.setHiredCity(hiredCandidateDTO.getHiredCity());
+		hiredCandidate.setHiredDate(hiredCandidateDTO.getHiredDate());
+		hiredCandidate.setDegree(hiredCandidateDTO.getDegree());
+		hiredCandidate.setHiredLab(hiredCandidateDTO.getHiredLab());
+		hiredCandidate.setAttitudeRemark(hiredCandidateDTO.getAttitudeRemark());
+		hiredCandidate.setCommunicationRemark(hiredCandidateDTO.getCommunicationRemark());
+		hiredCandidate.setKnowledgeRemark(hiredCandidateDTO.getKnowledgeRemark());
+		hiredCandidate.setOnboardingStatus(hiredCandidateDTO.getOnboardingStatus());
+		hiredCandidate.setStatus(hiredCandidateDTO.getStatus());
+//		hiredCandidate.setCreatorUser(id);
+		hiredCandidate.setJoinDate(hiredCandidateDTO.getJoinDate());
+		hiredCandidate.setLocation(hiredCandidateDTO.getLocation());
+//		hiredCandidate.setAggPer(hiredCandidateDTO.getAggPer());
+//		hiredCandidate.setCurrentPinCode(hiredCandidateDTO.getCurrentPinCode());
+//		hiredCandidate.setPermanentPincode(hiredCandidateDTO.getPermanentPincode());
+		
+		
+		return candidateRepo.save(hiredCandidate);
+	}
+	
+	
+}

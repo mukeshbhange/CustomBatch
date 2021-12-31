@@ -19,100 +19,117 @@ import com.bl.addressbook.util.JwtUtil;
 @Service
 public class AddressBookServices implements IAddressBookServices {
 	
+	private long user_id = 101;
+	private String email = "bhangemukesh98@gmail.com";
+	private String password = "Mukesh@000";
+	
 	@Autowired
-	JwtUtil uToken;
+	JwtUtil tokenutil;
 	
 	@Autowired
 	UserDataRepo userRepo;
 	
 	@Override
-	public UserData addUserData(UserDTO userDTO) {
-		if(userRepo.findByEmail(userDTO.email) == null) {
-			throw new AddressBookExceptions(userDTO.email+" this email is already present,Please Use another one");
-		}else {
+	public UserData addUserData(String loginToken,UserDTO userDTO) {
+		if(tokenutil.decodeToken(loginToken) == user_id) {
 			UserData userData = new UserData(userDTO);
 			Address address = userData.getAddress();
 			address.setUser(userData);
 			userData.setAddress(address);
-
 			userRepo.save(userData);
 			return userData;
 		}
+		return null;
 	}
 
 
 	@Override
-	public UserData deleteUser(String token) throws UserNotFoundException {
-		if(!userRepo.findById(uToken.decodeToken(token)).isEmpty()) {
-			 UserData deleted = getOne(token);
-			userRepo.deleteById(uToken.decodeToken(token));
-			return deleted;
-		}else {
-			throw new AddressBookExceptions(" "+uToken.decodeToken(token)+" Id is not Present");
+	public UserData deleteUser(String loginToken,long id) throws UserNotFoundException {
+		if(tokenutil.decodeToken(loginToken) == user_id) {
+			if(!userRepo.findById(id).isEmpty()) {
+				UserData deleted = getOne(loginToken,id);
+				userRepo.deleteById(id);
+				return deleted;
+			}else {
+				throw new AddressBookExceptions(" "+id+" Id is not Present");
+			}
 		}
+		return null;
 	}
 
 	@Override
-	public List<UserData> getAllUsers() {
-		
-		List<UserData> userData = new ArrayList<>();
-		userRepo.findAll().forEach(userData::add);
-		if(userData.isEmpty()) {
-			throw new AddressBookExceptions("No Data Present in Database,First Add Data");
-		}else {
-			return userData;
+	public List<UserData> getAllUsers(String loginToken) {
+		if(tokenutil.decodeToken(loginToken) == user_id) {
+			List<UserData> userData = new ArrayList<>();
+			userRepo.findAll().forEach(userData::add);
+			if(userData.isEmpty()) {
+				throw new AddressBookExceptions("No Data Present in Database,First Add Data");
+			}else {
+				return userData;
+			}
 		}
+		return null;
 	}
 
 	@Override
-	public UserData getOne(String token) throws UserNotFoundException {
-		if(userRepo.findById(uToken.decodeToken(token)).isEmpty()) {
-			throw new AddressBookExceptions(" "+uToken.decodeToken(token)+" Id is not Present");
-		}else {
-			return userRepo.findById(uToken.decodeToken(token)).get();
-			
-		}	
-	}
+	public UserData getOne(String loginToken,long id) throws UserNotFoundException {
+		if(tokenutil.decodeToken(loginToken) == user_id) {
+			if(userRepo.findById(id).isEmpty()) {
+				throw new AddressBookExceptions(" "+id+" Id is not Present");
+			}else {
+				return userRepo.findById(id).get();
 
-
-	@Override
-	public UserData updateUser(String token, UserData userData) throws UserNotFoundException {
-		UserData found_user = this.getOne(token);
-		if(found_user != null) {
-			found_user.setName(userData.getName());
-			found_user.setMobileNo(userData.getMobileNo());
-			found_user.setEmail(userData.getEmail());
-			found_user.setGender(userData.getGender());
-			
-			Long found_user_addr_id = found_user.getAddress().getId();
-			Address address = new Address();
-			
-			address.setId(found_user_addr_id);
-			address.setLandmark(userData.getAddress().getLandmark());
-			address.setCity(userData.getAddress().getCity());
-			address.setState(userData.getAddress().getState());
-			address.setCountry(userData.getAddress().getCountry());
-			address.setPinCode(userData.getAddress().getPinCode());
-			address.setUser(found_user);
-			found_user.setAddress(address);
-			userRepo.save(found_user);
-			
-			return found_user;
-		}else {
-			throw new AddressBookExceptions(" "+uToken.decodeToken(token)+" Id is not Present");
+			}	
 		}
+		return null;
 	}
 
 
 	@Override
-	public List<UserData> usersByCity(String city) {
-		List<UserData> userByCityList =  userRepo.usersByCity(city);
-		
-		if(userByCityList.isEmpty()) {
-			throw new AddressBookExceptions("No User Present in "+city+"city");
-		}else {
-			return userByCityList;
+	public UserData updateUser(String loginToken,long id, UserData userData) throws UserNotFoundException {
+		if(tokenutil.decodeToken(loginToken) == user_id) {
+			UserData found_user = this.getOne( loginToken,id);
+
+			if(found_user != null) {
+				found_user.setName(userData.getName());
+				found_user.setMobileNo(userData.getMobileNo());
+				found_user.setEmail(userData.getEmail());
+				found_user.setGender(userData.getGender());
+
+				Long found_user_addr_id = found_user.getAddress().getId();
+				Address address = new Address();
+
+				address.setId(found_user_addr_id);
+				address.setLandmark(userData.getAddress().getLandmark());
+				address.setCity(userData.getAddress().getCity());
+				address.setState(userData.getAddress().getState());
+				address.setCountry(userData.getAddress().getCountry());
+				address.setPinCode(userData.getAddress().getPinCode());
+				address.setUser(found_user);
+				found_user.setAddress(address);
+				userRepo.save(found_user);
+
+				return found_user;
+			}else {
+				throw new AddressBookExceptions(" "+id+" Id is not Present");
+			}
 		}
+		return userData;
+	}
+
+
+	@Override
+	public List<UserData> usersByCity(String loginToken,String city) {
+		if(tokenutil.decodeToken(loginToken) == user_id) {
+			List<UserData> userByCityList =  userRepo.usersByCity(city);
+
+			if(userByCityList.isEmpty()) {
+				throw new AddressBookExceptions("No User Present in "+city+"city");
+			}else {
+				return userByCityList;
+			}
+		}
+		return null;
 	}
 
 
@@ -129,15 +146,14 @@ public class AddressBookServices implements IAddressBookServices {
 
 	@Override
 	public Object loginToAddressBook(String email, String password) throws AddressBookExceptions {
-		UserData user = userRepo.findByEmail(email);
-		if(user != null) {
-			if(password.equals(user.getPassword())) {
-				return uToken.createToken(user.getUser_id());
-			}else {
-				throw new AddressBookExceptions("Password is Wrong for this User");
+		if (email.equals(this.email)) {
+			if (password.equals(this.password)) {
+				return tokenutil.createToken(this.user_id);
+			} else {
+				throw new UserNotFoundException(500,"Wrong Password!");
 			}
-		}else {
-			throw new AddressBookExceptions("No Such Email present in AddressBook");
+		} else {
+			throw new UserNotFoundException(404, "User not exist");
 		}
 	}
 }

@@ -1,0 +1,5 @@
+package com.bl.onboarding.config;
+
+public class SwaggerConfig {
+
+}

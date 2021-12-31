@@ -1,0 +1,10 @@
+package com.bl.onboarding.services;
+
+import com.bl.onboarding.dto.OnboardingDTO;
+import com.bl.onboarding.model.Onboarding;
+
+public interface IOnboardingServices {
+
+	Onboarding addUserData(String loginToken, OnboardingDTO user);
+
+}

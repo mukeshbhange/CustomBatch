@@ -1,0 +1,22 @@
+package com.bl.onboarding.services;
+
+import java.util.List;
+
+import com.bl.onboarding.dto.OnboardingDTO;
+import com.bl.onboarding.exception.LoginException;
+import com.bl.onboarding.exception.UserNotFoundException;
+import com.bl.onboarding.model.Onboarding;
+
+public interface IOnboardingServices {
+
+	Onboarding addUserData(String loginToken, OnboardingDTO user) throws LoginException;
+
+	Onboarding getbyId(String token, long id) throws LoginException, UserNotFoundException;
+
+	Onboarding delete(String token, long id);
+
+	List<Onboarding> getAllOnboardingStudent(String token);
+
+	Onboarding editUser(String token, long id, OnboardingDTO user);
+
+}

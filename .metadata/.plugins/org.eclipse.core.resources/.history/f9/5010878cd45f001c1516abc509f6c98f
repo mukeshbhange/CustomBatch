@@ -1,0 +1,20 @@
+package com.bl.onboarding.controller;
+
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/onboarding")
+class OnObardingController {
+	
+	@PostMapping("/add")
+	public ResponseEntity<Response> addUser(@RequestHeader String loginToken,@Valid @RequestBody UserDTO user) {
+		UserData userdata = services.addUserData(loginToken,user);
+		ResponseDTO responseDTO = new ResponseDTO("User Added SuccessFully",userdata);
+		return new ResponseEntity<ResponseDTO>(responseDTO,HttpStatus.OK);
+	}
+	
+	
+
+}

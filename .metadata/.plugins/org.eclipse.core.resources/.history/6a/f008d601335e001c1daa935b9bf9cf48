@@ -1,0 +1,5 @@
+package com.bl.candidate.dto;
+
+public class CandidateDTO {
+
+}

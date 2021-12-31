@@ -1,0 +1,10 @@
+package com.bl.candidate.services;
+
+import com.bl.candidate.dto.CandidateDTO;
+import com.bl.candidate.model.Candidate;
+
+
+public interface ICandidateServices {
+	
+	Candidate addUser(String token, CandidateDTO user);
+}

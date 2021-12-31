@@ -1,0 +1,79 @@
+package com.bl.onboarding.model;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+
+import com.bl.onboarding.dto.OnboardingDTO;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+public class Onboarding {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
+	
+	private String firstName;
+	private String middleName;
+	private String lastName;
+	private String email;
+	private String mobileNum;
+	private String hiredCity;
+	private String parentName;
+	private String parentMobile;
+	private String temporaryAddress;
+	private String parentOccupation;
+	private String parentAnnualSalary;
+	private String permanentAddress;
+	private String profileImage;
+	private String folderId;
+	private String status;
+	private String creatorStamp;
+	private String updateStamp;
+	
+	
+	@OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "onboarding")
+	@JsonManagedReference
+	private BankInfo bankInfo;
+	
+
+	@OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "onboarding")
+	@JsonManagedReference
+	private QualificationInfo qualificationInfo;
+	
+	
+	public Onboarding(OnboardingDTO onboardingDTO) {
+		this.firstName = onboardingDTO.getFirstName();
+		this.middleName = onboardingDTO.getFirstName();
+		this.lastName = onboardingDTO.getFirstName();
+		this.email = onboardingDTO.getFirstName();
+		this.mobileNum = onboardingDTO.getFirstName();
+		this.hiredCity = onboardingDTO.getFirstName();
+		this.parentName = onboardingDTO.getFirstName();
+		this.parentMobile = onboardingDTO.getFirstName();
+		this.parentAnnualSalary = onboardingDTO.getFirstName();
+		this.parentOccupation = onboardingDTO.getFirstName();
+		this.temporaryAddress = onboardingDTO.getFirstName();
+		this.permanentAddress = onboardingDTO.getFirstName();
+		this.profileImage = onboardingDTO.getFirstName();
+		this.folderId = onboardingDTO.getFirstName();
+		this.status = onboardingDTO.getFirstName();
+		this.creatorStamp = onboardingDTO.getFirstName();
+		this.bankInfo = onboardingDTO.getBankInfo();
+		this.qualificationInfo = onboardingDTO.getQualificationInfo();
+		
+	}
+
+}

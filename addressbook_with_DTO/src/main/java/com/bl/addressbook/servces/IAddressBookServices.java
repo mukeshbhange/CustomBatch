@@ -8,17 +8,17 @@ import com.bl.addressbook.model.UserData;
 
 public interface IAddressBookServices {
 
-	UserData deleteUser(String token) throws UserNotFoundException;
+	UserData deleteUser(String loginToken,long id) throws UserNotFoundException;
 
-	List<UserData> getAllUsers();
+	List<UserData> getAllUsers(String loginToken);
 
-	UserData getOne(String token) throws UserNotFoundException;
+	UserData getOne(String loginToken,long id) throws UserNotFoundException;
 
-	UserData updateUser(String token, UserData userData) throws UserNotFoundException;
+	UserData updateUser(String loginToken,long id, UserData userData) throws UserNotFoundException;
 
-	UserData addUserData(UserDTO user);
+	UserData addUserData(String loginToken,UserDTO user);
 
-	List<UserData> usersByCity(String city);
+	List<UserData> usersByCity(String loginToken,String city);
 
 	List<UserData> allUsersSortedByName();
 

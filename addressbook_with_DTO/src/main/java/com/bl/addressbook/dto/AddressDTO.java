@@ -13,10 +13,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AddressDTO {
 	
-	@Pattern( regexp="^[A-Z]{1}[a-zA-Z\\s]{2,}$",message = "First Letter of Landmark Must be capital")
+	@NotBlank(message="City field city Cant be Empty")
 	public String landmark;
 	
-	@NotBlank(message="Address field city Cant be Empty")
+	@NotBlank(message="City field city Cant be Empty")
 	public String city;
 	
 	@NotBlank(message="Address field state Cant be Empty")

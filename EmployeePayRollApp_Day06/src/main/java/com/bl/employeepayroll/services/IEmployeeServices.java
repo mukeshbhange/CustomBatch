@@ -15,11 +15,11 @@ public interface IEmployeeServices {
 	
 	EmployeePayrollData addEmployeePayrollData(EmployeeDTO employeedto);
 	
-	EmployeePayrollData getEmployeePayrollDataById(String token);
+	EmployeePayrollData getEmployeePayrollDataById(long id);
 	
-	void deleteEmployeePayrollDataById(String token);
+	void deleteEmployeePayrollDataById(Long id);
 	
-	EmployeePayrollData updateEmployeePayrollDataById(String token, EmployeeDTO employeedto);
+	EmployeePayrollData updateEmployeePayrollDataById(long id, EmployeeDTO employeedto);
 	
 	List<EmployeePayrollData> findByDepatment(String department);
 	

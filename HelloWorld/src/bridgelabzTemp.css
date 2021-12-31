@@ -1,0 +1,28 @@
+
+.row{
+    height: 100vh;
+}
+
+.blz_orangebody{
+    background-color: orange;
+}
+
+.blz_orangebody h1{
+    font-size: 60px;
+    text-align: center;
+    color: rgb(21, 21, 80);
+    text-shadow: 3px,3px,1px black;
+}
+
+.blz_logo_img{
+    display: block;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+.blz_input_name{
+    display: block;
+    margin: 0 auto;
+    padding: 10px;
+
+}

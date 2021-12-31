@@ -1,0 +1,15 @@
+package com.bl.onboarding.repository;
+
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.stereotype.Repository;
+
+import com.bl.onboarding.model.Onboarding;
+
+
+@Repository
+@EnableJpaRepositories
+public interface OnboardingRepo extends JpaRepository<Long, Onboarding> {
+
+}

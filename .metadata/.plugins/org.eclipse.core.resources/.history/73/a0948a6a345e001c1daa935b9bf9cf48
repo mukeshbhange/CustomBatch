@@ -1,0 +1,43 @@
+package com.bl.candidate.model;
+
+import com.bl.candidate.dto.CandidateDTO;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+@Data
+@NoArgsConstructor
+@ToString
+public class Candidate {
+	
+	private String firstName;
+	private String middleName;
+	private String lastName;
+	private String email;
+	private String mobile;
+	private String hiredCity;
+	private String hiredDate;
+	private String degree;
+	private String attitudeRemark;
+	private String knowledgeRemark;
+	private String onBoardingStatus;
+	private String status;
+	private String creatorUser;
+	private String joindate;
+	private String location;
+	private double aggrPer;
+	private int currentPincode ;
+	private int permanentPincode;
+	
+	public Candidate(CandidateDTO candidate) {
+		this.firstName = candidate.getFirstName();
+		this.middleName = candidate.getMiddleName();
+		this.lastName = candidate.getLastName();
+		this.email = candidate.getEmail();
+		this.mobile = candidate.getMobile();
+		this.hired
+	}
+
+}

@@ -1,0 +1,75 @@
+package com.bl.onboarding.services;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.bl.onboarding.dto.OnboardingDTO;
+import com.bl.onboarding.exception.LoginException;
+import com.bl.onboarding.exception.UserNotFoundException;
+import com.bl.onboarding.model.BankInfo;
+import com.bl.onboarding.model.Onboarding;
+import com.bl.onboarding.model.QualificationInfo;
+import com.bl.onboarding.repository.OnboardingRepo;
+
+@Service
+public class OnboardingServices implements IOnboardingServices{
+	
+	@Autowired
+	private OnboardingRepo onboardingRepo;
+
+	@Override
+	public Onboarding addUserData(String loginToken, OnboardingDTO user) throws LoginException {
+		if(!loginToken.isEmpty()) {
+			Onboarding onboardingUser = new Onboarding(user);
+			BankInfo bankInfo = user.getBankInfo();
+			QualificationInfo qualifiInfo = user.getQualificationInfo();
+			
+			onboardingUser.setBankInfo(bankInfo);
+			onboardingUser.setQualificationInfo(qualifiInfo);
+			
+			bankInfo.setOnboarding(onboardingUser);
+			qualifiInfo.setOnboarding(onboardingUser);
+			
+			return onboardingRepo.save(onboardingUser);
+		}else {
+			throw new LoginException("Access Denied...!");
+		}
+	}
+
+	@Override
+	public Onboarding getbyId(String token, long id) throws LoginException {
+		if(token.isEmpty()) {
+			throw new LoginException("Access Denied...!");
+		}else {
+			Optional<Onboarding> isPresent = onboardingRepo.findById(id);
+			if(isPresent.isPresent()) {
+				return isPresent.get();
+			}else {
+				throw new UserNotFoundException("User not present of this Id");
+			}
+			
+		}
+	}
+
+	@Override
+	public Onboarding delete(String token, long id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Onboarding> getAllOnboardingStudent(String token) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Onboarding editUser(String token, long id, OnboardingDTO user) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

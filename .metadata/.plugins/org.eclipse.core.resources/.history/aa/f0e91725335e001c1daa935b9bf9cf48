@@ -1,0 +1,5 @@
+package com.bl.candidate.model;
+
+public class Candidate {
+
+}

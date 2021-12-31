@@ -1,0 +1,3 @@
+
+server.port=8989
+zuul.routes.lms-admin.path=

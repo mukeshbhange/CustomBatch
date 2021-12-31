@@ -1,0 +1,125 @@
+package com.bl.onboarding.services;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.bl.candidate.model.Candidate;
+import com.bl.onboarding.dto.OnboardingDTO;
+import com.bl.onboarding.exception.LoginException;
+import com.bl.onboarding.exception.UserNotFoundException;
+import com.bl.onboarding.model.BankInfo;
+import com.bl.onboarding.model.Onboarding;
+import com.bl.onboarding.model.QualificationInfo;
+import com.bl.onboarding.repository.OnboardingRepo;
+
+@Service
+public class OnboardingServices implements IOnboardingServices{
+	
+	@Autowired
+	private OnboardingRepo onboardingRepo;
+
+	@Override
+	public Onboarding addUserData(String token, OnboardingDTO user) throws LoginException {
+		if(!token.isEmpty()) {
+			Onboarding onboardingUser = new Onboarding(user);
+			BankInfo bankInfo = user.getBankInfo();
+			QualificationInfo qualifiInfo = user.getQualificationInfo();
+			
+			onboardingUser.setBankInfo(bankInfo);
+			onboardingUser.setQualificationInfo(qualifiInfo);
+			
+			bankInfo.setOnboarding(onboardingUser);
+			qualifiInfo.setOnboarding(onboardingUser);
+			
+			return onboardingRepo.save(onboardingUser);
+		}else {
+			throw new LoginException("Access Denied...!");
+		}
+	}
+
+	@Override
+	public Onboarding getOnboardingbyId(String token, long id) throws LoginException, UserNotFoundException {
+		if(token.isEmpty()) {
+			throw new LoginException("Access Denied...!");
+		}else {
+			Optional<Onboarding> isPresent = onboardingRepo.findById(id);
+			if(isPresent.isPresent()) {
+				return isPresent.get();
+			}else {
+				throw new UserNotFoundException("User not present of this Id");
+			}
+			
+		}
+	}
+
+	@Override
+	public Onboarding delete(String token, long id) throws LoginException, UserNotFoundException {
+		if(token.isEmpty()) {
+			throw new LoginException("Access Denied...!");
+		}else {
+			if(this.getOnboardingbyId(token, id) != null) {
+				onboardingRepo.delete(this.getOnboardingbyId(token, id));
+				return getOnboardingbyId(token, id);
+			}else {
+				throw new UserNotFoundException("User not present of this Id");
+			}
+		}
+
+
+	}
+
+	@Override
+	public List<Onboarding> getAllOnboardingStudent(String token) throws LoginException, UserNotFoundException{
+		if(!token.isEmpty()) {
+			List<Onboarding> userData = new ArrayList<>();
+			onboardingRepo.findAll().forEach(userData::add);
+			if(userData.isEmpty()) {
+				throw new UserNotFoundException("No Data Present in Database,First Add Data");
+			}else {
+				return userData;
+			}
+		}else {
+			throw new LoginException("Access Denied...!");
+		}
+	}
+
+	@Override
+	public Onboarding editUser(String token, long id, OnboardingDTO user) throws LoginException, UserNotFoundException {
+		if(token.isEmpty()) {
+			throw new LoginException("Access Denied...!");	
+		}else {
+			if(this.getOnboardingbyId(token, id) != null) {
+				Onboarding onboardCandidate = this.getOnboardingbyId(token, id);
+				
+				onboardCandidate.setFirstName(user.getFirstName());
+				onboardCandidate.setLastName(user.getLastName());
+				onboardCandidate.setMiddleName(user.getMiddleName());
+				onboardCandidate.setEmail(user.getEmail());
+				onboardCandidate.setMobileNum(user.getMobileNum());
+				hiredCandidate.setHiredCity(user.getHiredCity());
+				hiredCandidate.setHiredDate(user.getHiredDate());
+				hiredCandidate.setDegree(user.getDegree());
+				hiredCandidate.setAttitudeRemark(user.getAttitudeRemark());
+				hiredCandidate.setKnowledgeRemark(user.getKnowledgeRemark());
+				hiredCandidate.setOnBoardingStatus(user.getOnBoardingStatus());
+				hiredCandidate.setStatus(user.getStatus());
+				hiredCandidate.setJoindate(user.getJoindate());
+				hiredCandidate.setLocation(user.getLocation());
+				hiredCandidate.setAggrPer(user.getAggrPer());
+				hiredCandidate.setCurrentPincode(user.getCurrentPincode());
+				hiredCandidate.setPermanentPincode(user.getPermanentPincode());
+				
+				
+				return candidateRepo.save(hiredCandidate);
+				
+			}else {
+				throw new UserNotFoundException("User not present of this Id");
+			}
+		}
+	}
+
+}

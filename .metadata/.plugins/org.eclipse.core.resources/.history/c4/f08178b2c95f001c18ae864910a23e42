@@ -1,0 +1,42 @@
+package com.bl.hirecandidate.model;
+
+import java.time.LocalDateTime;
+
+import javax.persistence.CascadeType;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+public class BankInfo {
+	
+	@Id
+	private long id;
+	
+	private String panNumber;
+	private String aadharNumber;
+	private String bankName;
+	private String bankAccountNumber;
+	private String ifscCode;
+	private String passbookPath;
+	private String panPath;
+	private String aadharPath;
+	private LocalDateTime creatorStamp;
+	private LocalDateTime updateStamp;
+	
+	@OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+	@JoinColumn(name="onboarding_id")
+	@JsonBackReference
+	private Onboarding onboarding;
+
+}
